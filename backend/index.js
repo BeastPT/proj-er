@@ -11,17 +11,18 @@ app.use(express.json()) // Middleware para interpretar JSON
 app.use(cors()); // Middleware para permitir CORS (https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS) (Comunicacao entre servidores diferentes)
 
 
-import auth from './routes/auth.js';
-import chat from './routes/chat.js';
-import service from './routes/services.js';
-import users from './routes/users.js';
-import product from './routes/product.js'
+import fs from 'fs'
+import path from 'path'
 
-app.use('/api/auth', auth); 
-app.use('/api/chat', chat);
-app.use('/api/service', service);
-app.use('/api/product', product);
-app.use('/api/user', users)
+const __dirname = path.resolve();
+const routesPath = path.join(__dirname, 'routes')
+
+fs.readdirSync(routesPath).forEach(file => {
+    if (file.endsWith('.js')) {
+        const route = require(path.join(routesPath, file))
+        app.use(`/api/${route}`, route.default)
+    }
+})
 
 app.listen(PORT, () => console.log(`SERVER IS RUNNING ON PORT ${PORT}`)) // Inicia o servidor na porta 3001
 
