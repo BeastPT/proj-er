@@ -1,11 +1,11 @@
 import mongoose from "mongoose";
 
 const userSchema = new mongoose.Schema({
-    username: {
+    email: {
         type: String,
         required: true,
     },
-    email: {
+    phone: {
         type: String,
         required: true,
     },
@@ -13,13 +13,16 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    fullname: String,
-    address: String,
-    address_number: Number,
-    postal_code: String,
-    country: String,
-    city: String,
-    nacionality: String,
+    fullname: {
+        type: String,
+        required: true,
+    },
+    // address: String,
+    // address_number: Number,
+    // postal_code: String,
+    // country: String,
+    // city: String,
+    // nacionality: String,
     image_url: String
 }, { timestamps: true })
 
@@ -27,8 +30,9 @@ const model = mongoose.model('User', userSchema)
 
 /**
  * @typedef {Object} User
- * @property {string} username
  * @property {string} email
+ * @property {string} phone
+ * @property {string} fullname
  * @property {string} password
  */
 
@@ -45,6 +49,7 @@ export async function createUser(data) {
  * 
  * @param {string} [data.username]
  * @param {string} [data.email]
+ * @param {string} [data.phone]
  * @returns {User | null}
  */
 export async function getUserByData(data) {
@@ -64,8 +69,3 @@ export async function getUserById(id) {
 export async function updateUserById(id, data) {
     return await model.findByIdAndUpdate(id, data, { new: true }).exec()
 }
-
-
-
-
-// #### Não utilizados ####
