@@ -42,8 +42,8 @@ export function Register() {
                     <Button variant="light">Criar conta</Button>
                     <Text ta="center">
                         Já tem uma conta?{' '}
-                        <Anchor<'a'> href="#" fw={700} onClick={(event) => event.preventDefault()}>
-                            Clique aqui
+                        <Anchor href="/login" underline='hover' fw={700}>
+                        Clique aqui
                         </Anchor>
                     </Text>
                 </Stack>

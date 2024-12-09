@@ -1,4 +1,4 @@
-import { Anchor, Button, Paper, PasswordInput, Stack, TextInput, Title, Text, NumberInput, Container, NativeSelect } from '@mantine/core';
+import { Button, Paper, Stack, TextInput, Title, NativeSelect } from '@mantine/core';
 import { DatePickerInput } from '@mantine/dates';
 import { useState } from 'react';
 
@@ -28,7 +28,11 @@ export function MarcarConsulta() {
 
                 <NativeSelect label="Especialidade" description="Insira a especialidade" data={['Cardiologia', 'Urologia', 'Pediatria']} />
 
-                <NativeSelect label="Médico Disponível" data={['Pedro da Mata', 'Roberto Antunes', 'Lígia Freitas']} />
+                <NativeSelect label="Médico Disponível" data={[
+                        {label: 'Pedro da Mata', value: '1'}, 
+                        {label: 'Roberto Antunes', value: '2'}, 
+                        {label: 'Lígia Freitas', value: '3'}
+                    ]} />
 
                 <Button variant="light">Marcar Consulta</Button>
 

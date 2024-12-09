@@ -4,6 +4,7 @@ import { LoginPage } from './pages/Login.page';
 import { RegisterPage } from './pages/Register.page';
 import { MenuPage } from './pages/Menu.page';
 import { MarcarConsultaPage } from './pages/MarcarConsulta.page';
+import { HistoricoConsultaPage } from './pages/HistoricoConsulta.page';
 
 const router = createBrowserRouter([
   {
@@ -23,8 +24,12 @@ const router = createBrowserRouter([
     element: <MenuPage />,
   },
   {
-    path: '/marcarconsulta',
+    path: '/consulta/marcar',
     element: <MarcarConsultaPage />,
+  },
+  {
+    path: '/consulta/historico',
+    element: <HistoricoConsultaPage />,
   },
 ]);
 

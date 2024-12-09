@@ -1,4 +1,4 @@
-import { MarcarConsulta } from "@/components/MarcarConsulta/MarcarConsulta";
+import { MarcarConsulta } from "@/components/Consulta/MarcarConsulta/MarcarConsulta";
 
 export function MarcarConsultaPage() {
   return (

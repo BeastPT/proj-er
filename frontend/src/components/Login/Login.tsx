@@ -24,7 +24,7 @@ export function Login() {
                     <Button variant="light">Login</Button>
                     <Text ta="center">
                         Não tem uma conta?{' '}
-                        <Anchor<'a'> href="#" fw={700} onClick={(event) => event.preventDefault()}>
+                        <Anchor href="/register" underline='hover' fw={700}>
                             Registe-se
                         </Anchor>
                     </Text>

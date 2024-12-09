@@ -1,4 +1,4 @@
-import { Anchor, Button, Paper, PasswordInput, Stack, TextInput, Title, Text, NumberInput, Container } from '@mantine/core';
+import { Button, Paper, Stack, Title, Text } from '@mantine/core';
 
 export function Menu() {
     return (
