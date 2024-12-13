@@ -4,6 +4,7 @@ const userSchema = new mongoose.Schema({
     email: {
         type: String,
         required: true,
+        unique: true,
     },
     phone: {
         type: String,
@@ -17,13 +18,7 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    // address: String,
-    // address_number: Number,
-    // postal_code: String,
-    // country: String,
-    // city: String,
-    // nacionality: String,
-    image_url: String
+    image_url: String,
 }, { timestamps: true })
 
 const model = mongoose.model('User', userSchema)
