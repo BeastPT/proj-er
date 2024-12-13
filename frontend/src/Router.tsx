@@ -6,6 +6,9 @@ import { MenuPage } from './pages/Paciente/Menu.page';
 import { MarcarConsultaPage } from './pages/Paciente/MarcarConsulta.page';
 import { HistoricoConsultaPage } from './pages/Paciente/HistoricoConsulta.page';
 import { LoginPageMedico } from './pages/Medico/Login.page';
+import { InserirDisponibilidadeMedico } from './components/InserirDisponibilidadeMedico/InserirDisponibilidadeMedico';
+import { InserirDisponibilidade } from './pages/Medico/InserirDisponibilidade';
+import { HomePageMed } from './pages/Medico/HomePageMedico';
 
 const router = createBrowserRouter([
   {
@@ -35,7 +38,18 @@ const router = createBrowserRouter([
   {
     path: '/medico/login',
     element: <LoginPageMedico />,
+  },
+  {
+    path: '/InserirDisponibilidade',
+    element: <InserirDisponibilidadeMedico />,
+  },
+  {
+    path: '/HomePage',
+    element: <HomePageMed />,
   }
+
+
+ 
 ]);
 
 export function Router() {
