@@ -1,10 +1,11 @@
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import { HomePage } from './pages/Home.page';
-import { LoginPage } from './pages/Login.page';
-import { RegisterPage } from './pages/Register.page';
-import { MenuPage } from './pages/Menu.page';
-import { MarcarConsultaPage } from './pages/MarcarConsulta.page';
-import { HistoricoConsultaPage } from './pages/HistoricoConsulta.page';
+import { HomePage } from './pages/Paciente/Home.page';
+import { LoginPage } from './pages/Paciente/Login.page';
+import { RegisterPage } from './pages/Paciente/Register.page';
+import { MenuPage } from './pages/Paciente/Menu.page';
+import { MarcarConsultaPage } from './pages/Paciente/MarcarConsulta.page';
+import { HistoricoConsultaPage } from './pages/Paciente/HistoricoConsulta.page';
+import { LoginPageMedico } from './pages/Medico/Login.page';
 
 const router = createBrowserRouter([
   {
@@ -31,6 +32,10 @@ const router = createBrowserRouter([
     path: '/consulta/historico',
     element: <HistoricoConsultaPage />,
   },
+  {
+    path: '/medico/login',
+    element: <LoginPageMedico />,
+  }
 ]);
 
 export function Router() {
