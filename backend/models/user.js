@@ -60,6 +60,10 @@ export async function getUserById(id) {
     return await model.findById(id).exec()
 }
 
+export async function getUserByEmail(email) {
+    return await model.findOne({ email }).exec()
+}
+
 // update user by id
 export async function updateUserById(id, data) {
     return await model.findByIdAndUpdate(id, data, { new: true }).exec()

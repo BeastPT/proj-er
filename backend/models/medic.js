@@ -39,6 +39,16 @@ export async function getMedicById(ID) {
     }).populate('specialty').exec();
 }
 
+export async function getMedicByUserId(ID) {
+    if (!ID) {
+        return new Error("O campo 'ID' é obrigatório para busca.");
+    }
+    return await model.findOne({user: ID}).populate({
+        path: 'user',
+        select: '-password'
+    }).populate('specialty').exec();
+}
+
 
 export async function getMedicByEmail(email) {
     if (!email) {

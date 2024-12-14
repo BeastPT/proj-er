@@ -34,3 +34,11 @@ export async function getPacientByNUS(nus) {
         select: '-password'
     });
 }
+
+export async function getPacientByUserId(userId) {
+    return await model.findOne({ user: userId }).populate({
+        path: 'user',
+        select: '-password'
+    });
+
+}

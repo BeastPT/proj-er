@@ -29,3 +29,15 @@ const consultationSchema = new mongoose.Schema({
 }, { timestamps: true })
 
 const model = mongoose.model('Consultation', consultationSchema)
+
+export async function createConsultation(data){
+    return await model.create(data)
+}
+
+export async function getConsultationsFromPacient(pacient){
+    return await model.find({ pacient: pacient }).populate('medic').exec();
+}
+
+export async function getConsultationsFromMedic(medic){
+    return await model.find({ medic: medic }).populate('pacient').exec();
+}
