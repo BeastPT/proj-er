@@ -1,5 +1,7 @@
 import { getUserByData, createUser as createUserDB } from '../models/user.js'
 import { createPacient, getPacientByNUS } from '../models/pacient.js'
+import { getSpecialtyByName } from '../models/specialty.js'
+import { createMedic, getMedicById } from '../models/medic.js'
 
 /**
  * @param {String} req.body.fullname Nome de utilizador
@@ -117,6 +119,37 @@ export async function login(req, res) {
     res.status(200).json({ user: user })
 }
 
+export async function registerMedic(req, res) {
+    const { specialty } = req.body
+    if (!specialty) {
+        return res.status(400).json({message: 'Missing required fields 22'})
+    }
+    
+    const specialtyObj = await getSpecialtyByName(specialty)
+    if (!specialtyObj) {
+        return res.status(400).json({message: 'Invalid Specialty'})
+    }
+
+    const user = await createUser(req, res)
+
+    if (!user) {
+        return
+    }
+
+    if (user instanceof Error) {
+        return res.status(400).json({message: user.message})
+    }
+
+    const { _id: medicId } = await createMedic({ specialty: specialtyObj._id, user: user._id }) // Cria um novo medice
+
+    const medic = await getMedicById(medicId)
+
+    if (medic instanceof Error) {
+        return res.status(400).json({message: medic.message})
+    }
+
+    res.status(200).json(medic)
+}
 
 
 
