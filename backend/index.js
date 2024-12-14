@@ -13,22 +13,24 @@ app.use(cors()); // Middleware para permitir CORS (https://developer.mozilla.org
 
 import fs from 'fs'
 import path from 'path'
+import { pathToFileURL } from 'url';
 
 const __dirname = path.resolve();
 const routesPath = path.join(__dirname, 'routes')
 
-fs.readdirSync(routesPath).forEach(file => {
+fs.readdirSync(routesPath).forEach(async (file) => {
     if (file.endsWith('.js')) {
-        const route = require(path.join(routesPath, file))
-        app.use(`/api/${route}`, route.default)
+        const filePath = pathToFileURL(path.join(routesPath, file)).href;
+        const route = await import(filePath);
+        app.use(`/api/${file.replace('.js', '')}`, route.default);
     }
-})
+});
 
 app.listen(PORT, () => console.log(`SERVER IS RUNNING ON PORT ${PORT}`)) // Inicia o servidor na porta 3001
 
-mongoose.connect(process.env.MONGO_URL).then(() => { // Conecta-se à base de dados
+mongoose.connect(process.env.MONGO_URL, { useNewUrlParser: true, useUnifiedTopology: true }).then(() => { // Conecta-se à base de dados
     console.log("Connected to MongoDB");
 }).catch((err) => {
-    console.log(err);
+    console.error("Error connecting to MongoDB: ", err);
     process.exit(1);
 });
