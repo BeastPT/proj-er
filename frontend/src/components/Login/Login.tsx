@@ -2,41 +2,47 @@ import { Anchor, Button, Paper, PasswordInput, Stack, TextInput, Title, Text } f
 import { IconAt } from '@tabler/icons-react';
 
 export function Login() {
-    const icon = <IconAt stroke={2} size={16}/>
-    return (
-        <Paper p='xl'>
-            <Stack gap='xl' justify='flex-start'>
-                <Title ta="center" order={1}>Bem vindo à Online Clinic</Title>
+  const icon = <IconAt stroke={2} size={16} />;
 
-                <TextInput
-                    leftSectionPointerEvents="none"
-                    leftSection={icon}
-                    label="Email"
-                    placeholder="email@gmail.com"
-                />
+  return (
+    <Paper p="xl">
+      <Stack gap="xl" justify="flex-start">
+        <Title ta="center" order={1}>
+          Bem-vindo à Online Clinic
+        </Title>
 
-                <PasswordInput
-                    label="Password"
-                    placeholder="Coloque a sua senha"
-                />
 
-                <Stack gap='xs'>
-                    <Button variant="light">Login</Button>
-                    <Text ta="center">
-                        Não tem uma conta?{' '}
-                        <Anchor href="/register" underline='hover' fw={700}>
-                            Registe-se
-                        </Anchor>
-                    </Text>
-                </Stack>
+        <TextInput
+          leftSectionPointerEvents="none"
+          leftSection={icon}
+          label="Email"
+          placeholder="email@gmail.com"
+        />
 
-                <Stack gap='xs' mt={55}>
-                    <Title order={3} ta="center">
-                        Faz parte da equipa médica?
-                    </Title>
-                    <Button variant="filled">Sim, conectar</Button>
-                </Stack>
-            </Stack>
-        </Paper>
-    );
+        <PasswordInput
+          label="Password"
+          placeholder="Coloque a sua senha"
+        />
+
+        <Stack gap="xs">
+          <Button variant="light">Login</Button>
+          <Text ta="center">
+            Não tem uma conta?{' '}
+            <Anchor href="/register" underline="hover" fw={700}>
+              Registe-se
+            </Anchor>
+          </Text>
+        </Stack>
+
+        <Stack gap="xs" mt={55}>
+          <Title order={3} ta="center">
+            Faz parte da equipa médica?
+          </Title>
+          <Button component="a" href="/HomePage" variant="filled">
+            Sim, conectar
+          </Button>
+        </Stack>
+      </Stack>
+    </Paper>
+  );
 }
