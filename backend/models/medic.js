@@ -59,3 +59,47 @@ export async function getMedicByEmail(email) {
         select: '-password'
     }).populate('specialty').exec();
 }
+
+export async function addDisponibilityMedic(id, disponibility) {
+    if (!id) {
+        return new Error("O campo 'ID' é obrigatório para atualização.");
+    }
+
+    const alreadyexists = await getDisponibilityDate(id, disponibility.date)
+    if (alreadyexists.length > 0) {
+        return await model.findOneAndUpdate({
+            _id: id,
+            'disponibility.date': disponibility.date
+        }, {
+            $push: { 'disponibility.$.hours': { $each: disponibility.hours } }
+        }, { new: true }).exec();
+    } else {
+        console.log('doesnt exist')
+        return await model.findByIdAndUpdate(id, {
+            $push: { disponibility }
+        }, { new: true }).exec();
+    }
+}
+
+export async function getDisponibility(ID) {
+    if (!ID) {
+        return new Error("O campo 'ID' é obrigatório para busca.");
+    }
+    
+    return await model.findById(ID).select('disponibility').exec();
+}
+
+export async function getDisponibilityDate(id, date) {
+    if (!id) {
+        return new Error("O campo 'ID' é obrigatório para busca.");
+    }
+    if (!date || !(date instanceof Date)) {
+        return new Error("O campo 'date' é obrigatório para busca.");
+    }
+
+    return await model.aggregate([
+        { $match: { _id: new mongoose.Types.ObjectId(id) } },
+        { $unwind: '$disponibility' },
+        { $match: { 'disponibility.date': date } }
+    ]).exec();
+}
