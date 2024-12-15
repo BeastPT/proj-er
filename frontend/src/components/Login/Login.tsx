@@ -38,7 +38,7 @@ export function Login() {
           <Title order={3} ta="center">
             Faz parte da equipa médica?
           </Title>
-          <Button component="a" href="/HomePage" variant="filled">
+          <Button component="a" href="/medico/login" variant="filled">
             Sim, conectar
           </Button>
         </Stack>
