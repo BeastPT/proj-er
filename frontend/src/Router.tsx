@@ -9,6 +9,8 @@ import { LoginPageMedico } from './pages/Medico/Login.page';
 import { InserirDisponibilidadeMedico } from './components/InserirDisponibilidadeMedico/InserirDisponibilidadeMedico';
 import { InserirDisponibilidade } from './pages/Medico/InserirDisponibilidade';
 import { HomePageMed } from './pages/Medico/HomePageMedico';
+import { CancelarConsultaPage } from './pages/Paciente/CancelarConsulta';
+import { NotificationsPage } from './pages/Paciente/Notification';
 
 const router = createBrowserRouter([
   {
@@ -46,6 +48,14 @@ const router = createBrowserRouter([
   {
     path: '/HomePage',
     element: <HomePageMed />,
+  },
+  {
+    path: '/consulta/cancelar',
+    element: <CancelarConsultaPage />,
+  },
+  {
+    path: '/consulta/notifications',
+    element: <NotificationsPage />,
   }
 
 

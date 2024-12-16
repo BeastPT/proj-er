@@ -20,7 +20,7 @@ export function Menu() {
                     Ver Exames
                 </Button>
 
-                <Button component="a" href="/consulta/notificacoes" variant="filled">
+                <Button component="a" href="/consulta/notifications" variant="filled">
                     Notificações
                 </Button>
             </Stack>
