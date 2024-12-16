@@ -15,7 +15,8 @@ const medicSchema = new mongoose.Schema({
         date: Date,
         hours: [{
             start: Date,
-            end: Date
+            end: Date,
+            occupied: Boolean
         }]
     }]
 }, { timestamps: true })
@@ -74,7 +75,6 @@ export async function addDisponibilityMedic(id, disponibility) {
             $push: { 'disponibility.$.hours': { $each: disponibility.hours } }
         }, { new: true }).exec();
     } else {
-        console.log('doesnt exist')
         return await model.findByIdAndUpdate(id, {
             $push: { disponibility }
         }, { new: true }).exec();
@@ -102,4 +102,41 @@ export async function getDisponibilityDate(id, date) {
         { $unwind: '$disponibility' },
         { $match: { 'disponibility.date': date } }
     ]).exec();
+}
+
+export async function getAllMedics() {
+    return await model.find().populate({
+        path: 'user',
+        select: '_id fullname'
+    }).populate({
+        path: 'specialty',
+        select: '_id specialty'
+    }).exec();
+}
+
+
+export async function updateHourOccupied(medicid, date) {
+    const targetDate = new Date(date);
+    targetDate.setHours(0, 0, 0, 0);
+    const result = await model.findOneAndUpdate(
+        {
+            _id: medicid,
+            'disponibility.date': targetDate, // Comparação apenas com a data (sem horas)
+        },
+        {
+            $set: { 'disponibility.$.hours.$[hour].occupied': true },
+        },
+        {
+            arrayFilters: [
+                { 'hour.start': new Date(date) }, // Filtro no nível de `hours` para o horário exato
+            ],
+            new: true, // Retornar o documento atualizado
+        }
+    );
+
+    if (!result) {
+        throw new Error('Nenhum horário encontrado para atualizar.');
+    }
+
+    return result;
 }

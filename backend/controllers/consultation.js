@@ -1,5 +1,5 @@
 import { createConsultation, getConsultationsFromMedic, getConsultationsFromPacient } from "../models/consultation.js";
-import { getMedicById, getMedicByUserId } from "../models/medic.js";
+import { getMedicById, getMedicByUserId, updateHourOccupied } from "../models/medic.js";
 import { getPacientByUserId } from "../models/pacient.js";
 
 export async function newConsultation(req, res) {
@@ -11,10 +11,10 @@ export async function newConsultation(req, res) {
 
 
     if (!medicid || !date) {
-        return res.status(400).json({ error: "Os campos 'medicid', 'patientid' e 'date' são obrigatórios." });
+        return res.status(400).json({ error: "Os campos 'medicid' e 'date' são obrigatórios." });
     }
 
-    if (new Date(date) > new Date()) {
+    if (new Date(date) < new Date()) {
         return res.status(400).json({ error: "A data da consulta deve ser futura." });
     }
 
@@ -33,6 +33,8 @@ export async function newConsultation(req, res) {
         pacient: patient._id,
         timestamp: date,
     });
+
+    await updateHourOccupied(medicid, date)
 
     return res.status(201).json(consultation);
 }

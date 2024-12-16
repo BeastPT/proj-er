@@ -1,4 +1,4 @@
-import { addDisponibilityMedic, getDisponibility, getDisponibilityDate, getMedicById, getMedicByUserId } from "../models/medic.js";
+import { addDisponibilityMedic, getAllMedics, getDisponibility, getDisponibilityDate, getMedicById, getMedicByUserId } from "../models/medic.js";
 
 export async function addDisponibility(req, res) {
     const { timestamp, hours } = req.body
@@ -28,19 +28,25 @@ export async function addDisponibility(req, res) {
     if (hours && Array.isArray(hours)) {
         for (let i = 0; i < hours.length; i++) {
             disponibility.hours.push({
-                start: new Date(hours[i].start),
-                end: new Date(hours[i].end)
+                start: new Date(hours[i].start).setSeconds(0, 0),
+                end: new Date(hours[i].end).setSeconds(0, 0),
+                occupied: false
             })
         }
     } else if (typeof hours === 'number') {
-        disponibility.hours.push({
-            start: new Date(timestamp),
-            end: new Date(timestamp + hours*60*60*1000)
-        })
+        for (let i = 0; i < hours; i++) {
+            disponibility.hours.push({
+                start: new Date(timestamp + i*30*60*1000).setSeconds(0, 0),
+                end: new Date(timestamp + (i+1)*30*60*1000).setSeconds(0, 0),
+                occupied: false
+            })
+        }
+
     } else {
         disponibility.hours.push({
-            start: new Date(timestamp),
-            end: new Date(timestamp + 60*60*1000)
+            start: new Date(timestamp).setSeconds(0, 0),
+            end: new Date(timestamp + 30*60*1000).setSeconds(0, 0),
+            occupied: false
         })
     }
 
@@ -88,4 +94,10 @@ export async function getDisponibilityController(req, res) {
     }
 
     res.status(200).json(result);
+}
+
+export async function getAllData(req, res) {
+    const medics = await getAllMedics();
+
+    res.status(200).json(medics);
 }
