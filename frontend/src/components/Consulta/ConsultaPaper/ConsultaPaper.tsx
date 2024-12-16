@@ -45,6 +45,7 @@ export function ConsultaPaper({ status, especialidade, medico, timestamp, button
                         onClick={button.onClick}
                         style={button.style}
                         variant="light"
+                        color={button.color}
                         mt={16}
                     >
                         {button.text}
