@@ -2,7 +2,7 @@ import Capitalize from '@/utils/Capitalize';
 import { Paper, Title, Text, useMantineColorScheme, Button } from '@mantine/core';
 import dayjs from 'dayjs';
 
-interface ConsultaPaperButtonProps {
+interface ExamePaperButtonProps {
     onClick: () => void;
     text: string;
     style?: React.CSSProperties;
@@ -10,15 +10,16 @@ interface ConsultaPaperButtonProps {
     color?: string;
 }
 
-interface ConsultaPaperProps {
+interface ExamesPaperProps {
     status: 'por realizar' | 'realizada' | 'falhada' | 'cancelada';
-    especialidade: string;
+    nome: string;
+    urgencia: 'baixa' | 'normal' | 'alta';
     medico: string;
     timestamp: number;
-    button?: ConsultaPaperButtonProps;
+    button?: ExamePaperButtonProps;
 }
 
-export function ConsultaPaper({ status, especialidade, medico, timestamp, button }: ConsultaPaperProps) {
+export function ExamePaper({ status, nome, urgencia, timestamp, medico, button }: ExamesPaperProps) {
     const { colorScheme } = useMantineColorScheme();
     return (
         <Paper
@@ -32,13 +33,15 @@ export function ConsultaPaper({ status, especialidade, medico, timestamp, button
             }}
         >
                 <div>
-                    <Title order={3}>Consulta {status}</Title>
-                    <Text size="sm">{Capitalize(especialidade)}</Text>
+                    <Title order={3}>{nome}  {status}</Title>
                     <Text size="sm" mt="md">
+                        <strong>Urgência</strong>: {Capitalize(urgencia)}
+                    </Text>
+                    <Text size="sm">
                         <strong>Médico</strong>: {medico}
                     </Text>
                     <Text size="sm">
-                        <strong>Data da Consulta</strong>: {dayjs(timestamp).format('DD-MM-YYYY  HH:mm')}
+                        <strong>Data:</strong>: {dayjs(timestamp).format('DD-MM-YYYY  HH:mm')}
                     </Text>
                 </div>
                 {button && (

@@ -6,6 +6,6 @@ import * as consultationController from '../controllers/consultation.js';
 
 router.post('/new', auth, consultationController.newConsultation)
 router.get('/get', auth, consultationController.getConsultations)
-// router.post('/cancel', )
+router.put('/cancel', auth, consultationController.cancelConsultation)
 
 export default router

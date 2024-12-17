@@ -53,8 +53,18 @@ export async function getConsultationsFromPacient(pacient){
 }
 
 export async function getConsultationsFromMedic(medic){
-    return await model.find({ medic: medic }).populate('pacient').populate({
+    return await model.find({ medic: medic }).populate({
+        path: 'pacient',
+        populate: {
+            path: 'user',
+            select: 'fullname email'
+        }
+    }).populate({
         path: 'specialty',
         select: 'specialty'
     }).exec();
+}
+
+export async function getConsultationAndCancel(id){
+    return await model.findOneAndUpdate({ _id: id }, { status: 'cancelada' }, { new: true }).exec();
 }

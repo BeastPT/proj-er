@@ -11,6 +11,8 @@ import { InserirDisponibilidade } from './pages/Medico/InserirDisponibilidade';
 import { HomePageMed } from './pages/Medico/HomePageMedico';
 import { CancelarConsultaPage } from './pages/Paciente/CancelarConsulta';
 import { NotificationsPage } from './pages/Paciente/Notification';
+import { VerExamesPage } from './pages/Paciente/VerExames.page';
+import { HistoricoPacientesPage } from './pages/Medico/HistoricoPacientes.page';
 
 const router = createBrowserRouter([
   {
@@ -56,6 +58,14 @@ const router = createBrowserRouter([
   {
     path: '/consulta/notifications',
     element: <NotificationsPage />,
+  },
+  {
+    path: '/consulta/exames',
+    element: <VerExamesPage />,
+  },
+  {
+    path: '/medico/historico',
+    element: <HistoricoPacientesPage />,
   }
 
 

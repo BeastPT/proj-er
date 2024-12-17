@@ -42,9 +42,9 @@ export function HomePageMedico() {
                 <Button component="a" href="/consulta/historico" variant="filled">
                     Consultar Histórico Pacientes
                 </Button>
-                <Button component="a" href="/planoTratamento" variant="filled">
+                {/* <Button component="a" href="/planoTratamento" variant="filled">
                     Enviar Plano Tratamento
-                </Button>
+                </Button> */}
             </Stack>
         </Paper>
     );

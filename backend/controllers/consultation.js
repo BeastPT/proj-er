@@ -1,4 +1,4 @@
-import { createConsultation, getConsultationsFromMedic, getConsultationsFromPacient } from "../models/consultation.js";
+import { createConsultation, getConsultationAndCancel, getConsultationsFromMedic, getConsultationsFromPacient } from "../models/consultation.js";
 import { getMedicById, getMedicByUserId, updateHourOccupied } from "../models/medic.js";
 import { getPacientByUserId } from "../models/pacient.js";
 
@@ -59,4 +59,23 @@ export async function getConsultations(req, res) {
         const consultations = await getConsultationsFromMedic(medic._id);
         return res.status(200).json(consultations);
     }
+}
+
+export async function cancelConsultation(req, res) {
+    const { consultationid } = req.body;
+
+    if (!req.userId) {
+        return res.status(401).json({ error: "Não autorizado." });
+    }
+
+    if (!consultationid) {
+        return res.status(400).json({ error: "O campo 'consultationid' é obrigatório." });
+    }
+
+    const consultation = await getConsultationAndCancel(consultationid);
+    if (!consultation) {
+        return res.status(404).json({ error: "Consulta não encontrada." });
+    }
+
+    return res.status(204).send();
 }

@@ -15,6 +15,10 @@ const examSchema = new mongoose.Schema({
         ref: 'Medic',
         required: true,
     },
+    name: {
+        type: String,
+        required: true,
+    },
     status: {
         type: String,
         enum: ['por realizar', 'realizada', 'falhada', 'cancelada'],
@@ -22,10 +26,32 @@ const examSchema = new mongoose.Schema({
     },
     urgency: {
         type: String,
-        enum: ['low', 'medium', 'high'],
-        default: 'low',
+        enum: ['baixa', 'normal', 'alta'],
+        default: 'normal',
     },
     description: String,
 }, { timestamps: true })
 
 const model = mongoose.model('Exam', examSchema)
+
+
+export async function createExam(data){
+    return await model.create(data)
+}
+
+export async function getExamsFromPacient(pacient){
+    return await model.find({ pacient: pacient }).populate({
+        path: 'medic',
+        select: 'user specialty',
+        populate: [
+            {
+                path: 'user',
+                select: 'fullname email'
+            },
+            {
+                path: 'specialty',
+                select: 'specialty'
+            }
+        ]
+    }).exec();
+}
