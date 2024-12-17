@@ -1,3 +1,4 @@
+import Capitalize from '@/utils/Capitalize';
 import { Paper, Title, Text, useMantineColorScheme, Button } from '@mantine/core';
 import dayjs from 'dayjs';
 
@@ -10,7 +11,7 @@ interface ConsultaPaperButtonProps {
 }
 
 interface ConsultaPaperProps {
-    status: 'concluida' | 'por realizar' | 'cancelada';
+    status: 'por realizar' | 'realizada' | 'falhada' | 'cancelada';
     especialidade: string;
     medico: string;
     timestamp: number;
@@ -32,7 +33,7 @@ export function ConsultaPaper({ status, especialidade, medico, timestamp, button
         >
                 <div>
                     <Title order={3}>Consulta {status}</Title>
-                    <Text size="sm">{especialidade}</Text>
+                    <Text size="sm">{Capitalize(especialidade)}</Text>
                     <Text size="sm" mt="md">
                         <strong>Médico</strong>: {medico}
                     </Text>

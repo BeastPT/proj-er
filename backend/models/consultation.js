@@ -15,10 +15,15 @@ const consultationSchema = new mongoose.Schema({
         ref: 'Medic',
         required: true,
     },
+    specialty: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Specialty',
+        required: true,
+    },
     status: {
         type: String,
-        enum: ['pending', 'completed', 'failed', 'cancelled'],
-        default: 'pending',
+        enum: ['por realizar', 'realizada', 'falhada', 'cancelada'],
+        default: 'por realizar',
     },
     urgency: {
         type: String,
@@ -35,9 +40,21 @@ export async function createConsultation(data){
 }
 
 export async function getConsultationsFromPacient(pacient){
-    return await model.find({ pacient: pacient }).populate('medic').exec();
+    return await model.find({ pacient: pacient }).populate({
+        path: 'medic',
+        populate: {
+            path: 'user',
+            select: 'fullname email' // por exemplo
+        }
+    }).populate({
+        path: 'specialty',
+        select: 'specialty'
+    }).exec();
 }
 
 export async function getConsultationsFromMedic(medic){
-    return await model.find({ medic: medic }).populate('pacient').exec();
+    return await model.find({ medic: medic }).populate('pacient').populate({
+        path: 'specialty',
+        select: 'specialty'
+    }).exec();
 }

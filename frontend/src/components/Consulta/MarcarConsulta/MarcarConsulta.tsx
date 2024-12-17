@@ -1,64 +1,34 @@
 import { Button, Paper, Stack, TextInput, Title, NativeSelect } from '@mantine/core';
 import { DatePickerInput } from '@mantine/dates';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { useForm } from '@mantine/form';
+import { Data, User } from '@/types/data.types';
+import { useNavigate } from 'react-router-dom';
+import Capitalize from '@/utils/Capitalize';
 
 const BASE_URL = "http://localhost:3001/api/consultation/new";
 const BASE_URL2 = "http://localhost:3001/api/medic/getall";
 
-interface Specialty {
-    _id: string;
-    specialty: string;
-}
-
-interface User {
-    _id: string;
-    fullname: string;
-}
-
-interface Hour {
-    start: Date;
-    end: Date;
-    occupied: boolean;
-    _id: string;
-}
-
-interface Disponibility {
-    date: Date;
-    hours: Hour[];
-    _id: string;
-}
-
-interface Data {
-    _id: string;
-    specialty: Specialty;
-    user: User;
-    disponibility: Disponibility[];
-    createdAt: Date;
-    updatedAt: Date;
-    __v: number;
-}
-
-function capitalizeFirstLetter(val: string) {
-    return String(val).charAt(0).toUpperCase() + String(val).slice(1);
-}
-
 export function MarcarConsulta() {
     const [success, setSuccess] = useState<string | null>(null);
+    const [user, setUser] = useState<User | null>(null);
     const [error, setError] = useState<string | null>(null);
     const [data, setData] = useState<Data[]>([]);
     const [availableHours, setAvailableHours] = useState<string[]>([]);
     const [availableDates, setAvailableDates] = useState<Date[]>([]);
-    
-    // Get unique specialties from data and format for NativeSelect
-    const specialties = [...new Set(data.map(item => item.specialty.specialty))].map(specialty => ({
-        value: specialty,
-        label: capitalizeFirstLetter(specialty)
-    }));
 
-    // add to specialties array "Selecione uma especialidade"
-    specialties.unshift({ value: '', label: 'Selecione uma especialidade' });
-    
+    const navigate = useNavigate();
+
+    // Move specialties calculation into a useMemo to prevent recalculation on every render
+    const specialties = useMemo(() => {
+        const uniqueSpecialties = [...new Set(data.map(item => item.specialty.specialty))].map(specialty => ({
+            value: specialty,
+            label: Capitalize(specialty)
+        }));
+
+        return [{ value: '', label: 'Selecione uma especialidade' }, ...uniqueSpecialties];
+    }, [data]);
+
     const form = useForm({
         initialValues: {
             date: null as Date | null,
@@ -74,102 +44,125 @@ export function MarcarConsulta() {
         },
     });
 
-    // Fetch initial data
+    // Separate user data fetching and API data fetching into different effects
     useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const response = await fetch(BASE_URL2, {
-                    method: "GET",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "authorization": "admin",
-                    },
-                });
+        const userData = localStorage.getItem("user");
+        if (!userData) {
+            navigate("/login");
+            return;
+        }
 
-                if (!response.ok) {
-                    const errorData = await response.json();
-                    setError(errorData.error || "Erro ao buscar médicos.");
-                    console.log("Backend error:", errorData);
-                    return;
-                }
+        try {
+            const userDataParsed = JSON.parse(userData);
+            setUser(userDataParsed?.user);
+        } catch (error) {
+            console.error("Error parsing user data:", error);
+            navigate("/login");
+        }
+    }, [navigate]);
 
-                const fetchedData = await response.json();
-                setData(fetchedData);
-            } catch (err) {
-                setError("Erro ao conectar ao servidor.");
-                console.error("Fetch error:", err);
+    const fetchData = async () => {
+        try {
+            const response = await fetch(BASE_URL2, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    "authorization": "admin",
+                },
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                setError(errorData.error || "Erro ao buscar médicos.");
+                console.log("Backend error:", errorData);
+                return;
             }
-        };
-        
-        fetchData();
-    }, []);
 
-    // Get available doctors based on selected specialty
-    const getAvailableDoctors = () => {
+            const fetchedData = await response.json();
+            setData(fetchedData);
+        } catch (err) {
+            setError("Erro ao conectar ao servidor.");
+            console.error("Fetch error:", err);
+        }
+    };
+
+    useEffect(() => {
+        fetchData();
+    }, []); // Empty dependency array since this should only run once
+
+    // Move getAvailableDoctors into a useMemo
+    const availableDoctors = useMemo(() => {
         if (!form.values.specialty) return [];
-        
+
         return data
             .filter(item => item.specialty.specialty === form.values.specialty)
             .map(item => ({
                 label: item.user.fullname,
                 value: item._id
-            }))
-    };
+            }));
+    }, [data, form.values.specialty]);
+
+    // Update available dates when doctor is selected
+    useEffect(() => {
+        if (!form.values.medic) {
+            setAvailableDates([]);
+            return;
+        }
+
+        const selectedDoctor = data.find(item => item._id === form.values.medic);
+        if (!selectedDoctor) {
+            setAvailableDates([]);
+            return;
+        }
+
+        const dates = selectedDoctor.disponibility
+            .filter(d => d.hours.some(hour => !hour.occupied))
+            .map(d => new Date(d.date));
+
+        setAvailableDates(dates);
+    }, [form.values.medic, data]);
 
     // Update available hours when date and doctor are selected
     useEffect(() => {
-        if (form.values.medic) {
-            const selectedDoctor = data.find(item => item._id === form.values.medic);
-            if (selectedDoctor) {
-                // Get all available dates from doctor's disponibility
-                const dates = selectedDoctor.disponibility
-                    .filter(d => {
-                        // Check if there are any non-occupied hours in this date
-                        return d.hours.some(hour => !hour.occupied);
-                    })
-                    .map(d => new Date(d.date));
-                setAvailableDates(dates);
-            } else {
-                setAvailableDates([]);
-            }
-        } else {
-            setAvailableDates([]);
+        if (!form.values.date || !form.values.medic) {
+            setAvailableHours([]);
+            return;
         }
-    }, [form.values.medic, data]);
 
-    useEffect(() => {
-        if (form.values.date && form.values.medic) {
-            const selectedDoctor = data.find(item => item._id === form.values.medic);
-            if (selectedDoctor) {
-                const selectedDate = form.values.date;
-                const availability = selectedDoctor.disponibility.find(
-                    d => new Date(d.date).toDateString() === selectedDate.toDateString()
-                );
-
-                if (availability) {
-                    const hours = availability.hours
-                        .filter(hour => !hour.occupied)
-                        .map(hour => {
-                            const startTime = new Date(hour.start);
-                            return `${startTime.getHours().toString().padStart(2, '0')}:${startTime.getMinutes().toString().padStart(2, '0')}`;
-                        });
-                    setAvailableHours(hours);
-                } else {
-                    setAvailableHours([]);
-                }
-            }
+        const selectedDoctor = data.find(item => item._id === form.values.medic);
+        if (!selectedDoctor) {
+            setAvailableHours([]);
+            return;
         }
+
+        const selectedDate = form.values.date;
+        const availability = selectedDoctor.disponibility.find(
+            d => new Date(d.date).toDateString() === selectedDate.toDateString()
+        );
+
+        if (!availability) {
+            setAvailableHours([]);
+            return;
+        }
+
+        const hours = availability.hours
+            .filter(hour => !hour.occupied)
+            .map(hour => {
+                const startTime = new Date(hour.start);
+                return `${startTime.getHours().toString().padStart(2, '0')}:${startTime.getMinutes().toString().padStart(2, '0')}`;
+            });
+
+        setAvailableHours(hours);
     }, [form.values.date, form.values.medic, data]);
 
-    const shouldDisableDate = (date: Date) => {        
-        // If no doctor is selected, disable all dates
+    // Move shouldDisableDate into a useCallback
+    const shouldDisableDate = useCallback((date: Date) => {
         if (!form.values.medic) return true;
-        
-        // Check if the date is in availableDates
+
         return !availableDates.some(
             availableDate => availableDate.toDateString() === date.toDateString()
         );
-    };
+    }, [form.values.medic, availableDates]);
 
     const handleSubmit = async (values: typeof form.values) => {
         setError(null);
@@ -179,7 +172,7 @@ export function MarcarConsulta() {
             console.log("Validation errors:", validation.errors);
             return;
         }
-        
+
         const { date, time, medic } = values;
 
         if (!date) {
@@ -198,7 +191,7 @@ export function MarcarConsulta() {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
-                    "authorization": `development`,
+                    "authorization": user?.email ?? '',
                 },
                 body: JSON.stringify({
                     medicid: medic,
@@ -218,7 +211,7 @@ export function MarcarConsulta() {
             setError(null);
             console.log("Consulta criada:", consultation);
             form.reset();
-
+            fetchData();
 
         } catch (err) {
             setError("Erro ao conectar ao servidor.");
@@ -250,7 +243,7 @@ export function MarcarConsulta() {
                     <NativeSelect
                         label="Médico Disponível"
                         description="Selecione o médico"
-                        data={[{ value: '', label: 'Selecione um médico' }, ...getAvailableDoctors()]}
+                        data={[{ value: '', label: 'Selecione um médico' }, ...availableDoctors]}
                         {...form.getInputProps('medic')}
                         disabled={!form.values.specialty}
                         onChange={(event) => {

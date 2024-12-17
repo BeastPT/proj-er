@@ -17,8 +17,8 @@ const examSchema = new mongoose.Schema({
     },
     status: {
         type: String,
-        enum: ['pending', 'completed', 'failed', 'cancelled'],
-        default: 'pending',
+        enum: ['por realizar', 'realizada', 'falhada', 'cancelada'],
+        default: 'por realizar',
     },
     urgency: {
         type: String,

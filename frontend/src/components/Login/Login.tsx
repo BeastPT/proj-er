@@ -2,12 +2,13 @@ import { Anchor, Button, Paper, PasswordInput, Stack, TextInput, Title, Text } f
 import { IconAt } from '@tabler/icons-react';
 import { useForm } from '@mantine/form';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const BASE_URL = "http://localhost:3001/api/auth/login";
 
 export function Login() {
   const icon = <IconAt stroke={2} size={16} />;
-
+  const nav = useNavigate()
   const form = useForm({
     initialValues: {
       email: '',
@@ -43,9 +44,13 @@ export function Login() {
       if (!user.ok) {
         setError(userData.message); 
         return;
+      } else {
+        // Save user data to local storage
+        localStorage.setItem("user", JSON.stringify(userData));
+        console.log("Resposta da API:", userData);
+        nav("/menu");
       }
 
-      console.log("Resposta da API:", userData);
     } catch (err) {
       setError("Ocorreu um erro inesperado. Tente novamente.");
       console.error("Erro:", err);

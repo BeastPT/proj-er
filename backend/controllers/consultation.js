@@ -31,6 +31,7 @@ export async function newConsultation(req, res) {
     const consultation = await createConsultation({
         medic: medicid,
         pacient: patient._id,
+        specialty: medic.specialty._id,
         timestamp: date,
     });
 

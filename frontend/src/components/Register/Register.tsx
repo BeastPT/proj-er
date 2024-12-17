@@ -2,12 +2,15 @@ import { Anchor, Button, Paper, PasswordInput, Stack, TextInput, Title, Text, Nu
 import { IconAt } from '@tabler/icons-react';
 import { hasLength, isInRange, useForm } from '@mantine/form';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const BASE_URL = "http://localhost:3001/api/auth/register";
 
 export function Register() {
     const icon = <IconAt stroke={2} size={16} />
     const number = <Text size="xs">+351</Text>
+
+    const navigate = useNavigate();
 
     const form = useForm({
         mode: 'uncontrolled',
@@ -54,7 +57,9 @@ export function Register() {
             setError((await user.json()).message) // Se der erro, lança um erro com a mensagem vinda da API
             return
         } else if (user.status === 201) {
-            console.log(await user.json()) // RESPOSTA :D Conta registrada
+            const userData = await user.json();
+            localStorage.setItem("user", userData);
+            navigate("/menu");
         }
 
     }
