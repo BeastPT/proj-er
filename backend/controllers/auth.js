@@ -150,39 +150,3 @@ export async function registerMedic(req, res) {
 
     res.status(200).json(medic)
 }
-
-
-
-
-
-// /**
-//  * 
-//  * @param {String} req.body.oldpassword Antiga palavra pass
-//  * @param {String} req.body.newpassword Nova palavra pass
-//  * @param {*} res 
-//  * @returns Status 400 se falhou ou 200 se teve sucesso
-//  */
-// export async function updatepassword(req, res) {
-//     const { oldpassword, newpassword } = req.body
-//     if (!(oldpassword && newpassword)) {
-//         return res.status(400).json({message: 'Missing required fields'})
-//     }
-
-//     const user = await getUserByData({ email: req.user.email })
-//     if (!user) {
-//         return res.status(400).json({message: 'Invalid User'})
-//     }
-
-//     if (!await bcrypt.compare(oldpassword, user.password)) {
-//         return res.status(400).json({message: 'Invalid Credentials'})
-//     }
-
-//     if (!isValidPassword(newpassword)) {
-//         return res.status(400).json({message: 'Invalid New Password'})
-//     }
-
-//     const hashedPassword = await bcrypt.hash(newpassword, 10) // Encripta a palavra pass
-//     user.password = hashedPassword // Atualiza a palavra pass no documento
-//     await user.save() // Salva o documento
-//     res.status(200).json({message: 'Password updated successfully'})
-// }

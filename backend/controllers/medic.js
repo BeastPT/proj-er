@@ -44,8 +44,8 @@ export async function addDisponibility(req, res) {
 
     } else {
         disponibility.hours.push({
-            start: new Date(timestamp).setSeconds(0, 0),
-            end: new Date(timestamp + 30*60*1000).setSeconds(0, 0),
+            start: new Date(timestamp),
+            end: new Date(parseInt(timestamp) + 30*60*1000),
             occupied: false
         })
     }
@@ -78,7 +78,6 @@ export async function getDisponibilityController(req, res) {
     let result;
     if (!date) {
         result = await getDisponibility(medicid)
-        console.log(result)
     } else {
         let newdate = new Date(date);
         newdate.setHours(0, 0, 0, 0);
@@ -100,4 +99,17 @@ export async function getAllData(req, res) {
     const medics = await getAllMedics();
 
     res.status(200).json(medics);
+}
+
+export async function getMedicByEmail(req, res) {
+    if (!req.userId) {
+        return res.status(401).json({ error: "Não autorizado." });
+    }
+
+    const medic = await getMedicByUserId(req.userId);
+    if (!medic) {
+        return res.status(400).json({ message: 'Não autorizado.' });
+    }
+
+    res.status(200).json(medic);
 }

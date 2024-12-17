@@ -46,7 +46,7 @@ const router = createBrowserRouter([
     element: <InserirDisponibilidadeMedico />,
   },
   {
-    path: '/HomePage',
+    path: '/homepage',
     element: <HomePageMed />,
   },
   {

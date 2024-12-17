@@ -30,6 +30,8 @@ export function Login() {
   };
 
   const sendRequest = async (values: typeof form.values) => {
+    localStorage.removeItem("user");
+    localStorage.removeItem("medic");
     try {
       const user = await fetch(`${BASE_URL}`, {
         method: "POST",
