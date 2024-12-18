@@ -39,7 +39,7 @@ export function HomePageMedico() {
                 <Button component="a" href="/InserirDisponibilidade" variant="filled">
                     Inserir Disponibilidade
                 </Button>
-                <Button component="a" href="/consulta/historico" variant="filled">
+                <Button component="a" href="/medico/historico" variant="filled">
                     Consultar Histórico Pacientes
                 </Button>
                 {/* <Button component="a" href="/planoTratamento" variant="filled">

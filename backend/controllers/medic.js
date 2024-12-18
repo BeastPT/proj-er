@@ -43,9 +43,14 @@ export async function addDisponibility(req, res) {
         }
 
     } else {
+        // add 30min to timestamp
+        const date = new Date(timestamp)
+        const endDate = new Date(timestamp)
+        endDate.setMinutes(endDate.getMinutes() + 30)
+
         disponibility.hours.push({
-            start: new Date(timestamp),
-            end: new Date(parseInt(timestamp) + 30*60*1000),
+            start: date,
+            end: endDate,
             occupied: false
         })
     }

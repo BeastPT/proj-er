@@ -22,10 +22,6 @@ export async function addExam(req, res) {
         return res.status(400).json({ error: "Campos obrigatórios não preenchidos." });
     }
 
-    if (new Date(timestamp) < new Date()) {
-        return res.status(400).json({ error: "Data inválida." });
-    }
-
     const exam = await createExam({
         name,
         medic: medicid,

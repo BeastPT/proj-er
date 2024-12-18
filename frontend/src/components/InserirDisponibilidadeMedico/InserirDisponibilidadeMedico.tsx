@@ -20,10 +20,9 @@ export function InserirDisponibilidadeMedico() {
             const minutes = i % 2 ? '30' : '00';
             const time = `${hour}:${minutes}`;
 
-
             return {
                 label: time,
-                value: ((hour * 60 + parseInt(minutes)) * 1000).toString(),
+                value: time,
             };
         }),
         []
@@ -59,8 +58,8 @@ export function InserirDisponibilidadeMedico() {
     const sendRequest = async (values: typeof form.values) => {
         if (!values.date) return;
         const date = new Date(values.date);
-        date.setHours(0, 0, 0, 0);
-        const newDate = new Date(date.getTime() + parseInt(values.time));
+        const [hour, mins] = values.time.split(':');
+        date.setHours(parseInt(hour), parseInt(mins), 0, 0);
 
         try {
             const response = await fetch(BASE_URL, {
@@ -70,7 +69,7 @@ export function InserirDisponibilidadeMedico() {
                     "authorization": user?.email || "",
                 },
                 body: JSON.stringify({
-                    timestamp: newDate
+                    timestamp: date
                 }),
             });
 

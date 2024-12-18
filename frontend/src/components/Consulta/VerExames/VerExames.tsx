@@ -11,13 +11,6 @@ export function VerExames() {
 
     const [opened, { open, close }] = useDisclosure(false);
 
-    const [numPages, setNumPages] = useState<number>();
-    const [pageNumber, setPageNumber] = useState<number>(1);
-
-    function onDocumentLoadSuccess({ numPages }: { numPages: number }): void {
-        setNumPages(numPages);
-      }
-
     const [user, setUser] = useState<User | null>(null);
     const [error, setError] = useState<string | null>(null);
     const [exames, setExames] = useState<Consultation[]>([]);
@@ -63,6 +56,9 @@ export function VerExames() {
 
                 const fetchedData = await response.json();
                 setExames(fetchedData);
+                if (fetchedData.length === 0) {
+                    setError("Nenhum exame disponível.");
+                }
             } catch (err) {
                 setError("Erro ao conectar ao servidor.");
                 console.error("Fetch error:", err);

@@ -25,7 +25,7 @@ export function Register() {
             fullname: (value) => (value.trim() ? null : "O nome completo é obrigatório"),
             email: (value) => !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value) && 'O email deve ser válido',
             password: hasLength(
-                { min: 10 }, 'A senha deve ter pelo menos 6 caracteres'),
+                { min: 5 }, 'A senha deve ter pelo menos 5 caracteres'),
             phone: isInRange({ min: 100000000, max: 999999999 }, 'O número de telemóvel deve ter 9 dígitos'),
             nus: isInRange({ min: 100000000, max: 999999999 }, 'O número de utente de saúde deve ter 9 dígitos'),
         }
@@ -42,7 +42,6 @@ export function Register() {
         if (Object.keys(form.errors).length > 0) {
             return
         }
-        console.log('continue')
         const vals = form.getValues();
 
         const user = await fetch(`${BASE_URL}`, { // Faz uma requisição na API para registrar um usuário
@@ -56,8 +55,9 @@ export function Register() {
         if (!user.ok) {
             setError((await user.json()).message) // Se der erro, lança um erro com a mensagem vinda da API
             return
-        } else if (user.status === 201) {
+        } else {
             const userData = await user.json();
+
             localStorage.setItem("user", userData);
             navigate("/menu");
         }

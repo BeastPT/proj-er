@@ -7,7 +7,6 @@ import { MarcarConsultaPage } from './pages/Paciente/MarcarConsulta.page';
 import { HistoricoConsultaPage } from './pages/Paciente/HistoricoConsulta.page';
 import { LoginPageMedico } from './pages/Medico/Login.page';
 import { InserirDisponibilidadeMedico } from './components/InserirDisponibilidadeMedico/InserirDisponibilidadeMedico';
-import { InserirDisponibilidade } from './pages/Medico/InserirDisponibilidade';
 import { HomePageMed } from './pages/Medico/HomePageMedico';
 import { CancelarConsultaPage } from './pages/Paciente/CancelarConsulta';
 import { NotificationsPage } from './pages/Paciente/Notification';
@@ -17,7 +16,7 @@ import { HistoricoPacientesPage } from './pages/Medico/HistoricoPacientes.page';
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <HomePage />,
+    element: <LoginPage />,
   },
   {
     path: '/login',

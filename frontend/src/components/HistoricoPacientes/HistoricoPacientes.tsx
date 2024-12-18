@@ -91,7 +91,7 @@ export function HistoricoPacientes() {
             <Stack gap='md' mt='md' justify='flex-start'>
                 {
                     pacientes.map((consulta) =>
-                        <PacientesPaper nome={consulta.fullname} id={consulta._id} />
+                        <PacientesPaper nome={consulta.fullname} id={consulta._id} key={consulta._id}/>
                     )
                 }
                 {error && <div style={{ color: 'red' }}>{error}</div>}
